@@ -58,7 +58,7 @@ def sendMK3Command(command):
     # Read all the data coming back
     while True:
         data = readResult()
-        if data[0] != '\xFF' or data[1] != 'V':
+        if data[0] != 0xFF or data[1] != 0x56: # 0x56 == 'V'
             break
     return data
 
@@ -149,7 +149,7 @@ def readMultiplus(fileObj):
 # Initialize MK3 interface, setting address
 initMK3()
 
-#while True:
+while True:
     file_object = open('/ramdisk/VICTRON_MULTIPLUS.prom.tmp', mode='w')
     readMultiplus(file_object)
     file_object.flush()
