@@ -124,7 +124,27 @@ def readMultiplus(fileObj):
         data = sendMK3Command('46 00')
         DC_voltage = unpack('<H', data[6:8])[0]
         DC_current = unpack('<i', data[8:11] + (bytes.fromhex('00') if data[10] < 0x80 else bytes.fromhex('FF')))[0] # DC current fields are unsigned 24-bit values.
+        
+        # Clear the buffer
+        mk3.reset_input_buffer()
+ 
+        # The DC voltage scale and offset values, 'W' command == 0x57 in hex
+        data = sendMK3Command('57 36 04 00')
+        scale, ignore, offset = unpack('<h B h', data[3:8])
+        
+        # Apply
+        DC_voltage = (DC_voltage + offset) * scalefunc(scale)
 
+        # Clear the buffer
+        mk3.reset_input_buffer()
+
+        # The DC current scale and offset values, 'W' command == 0x57 in hex
+        data = sendMK3Command('57 36 05 00')
+        scale, ignore, offset = unpack('<h B h', data[3:8])
+
+        # Apply
+        DC_current = (DC_current + offset) * scalefunc(scale)
+        
         # Write the DC values to the output fileobject
 
         valName  = "mode=\"batVolts\""
