@@ -164,17 +164,22 @@ def readMultiplus(fileObj):
         print(dataStr, file=fileObj) 
         
     except Exception as e :
-        print(e)   
+        raise Exception(e)
+        #print(e)   
 
 # Initialize MK3 interface, setting address
 initMK3()
 
 while True:
     file_object = open('/ramdisk/VICTRON_MULTIPLUS.prom.tmp', mode='w')
-    readMultiplus(file_object)
-    file_object.flush()
-    file_object.close()
-    outLine = os.system('/bin/mv /ramdisk/VICTRON_MULTIPLUS.prom.tmp /ramdisk/VICTRON_MULTIPLUS.prom')
+    try: 
+        readMultiplus(file_object)
+        file_object.flush()
+        file_object.close()
+        outLine = os.system('/bin/mv /ramdisk/VICTRON_MULTIPLUS.prom.tmp /ramdisk/VICTRON_MULTIPLUS.prom')
+    except Exception as e :
+        print(e)
+        file_object.close()
     
     time.sleep(sleepTime)
 
