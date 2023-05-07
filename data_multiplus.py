@@ -157,10 +157,12 @@ def readMultiplus(fileObj):
         dataStr  = f"MULTIPLUS_INV{valName} {DC_current}"
         print(dataStr, file=fileObj)
 
-        # Combine the AC voltage and current to VA (W?)
-        valName  = "mode=\"outputVA\""
+        # Not sure of using the AC voltage and current - something seems wrong
+        # Use DC voltage and current instead (for now)
+        # Combine the DC voltage and current to Watt
+        valName  = "mode=\"outputW\""
         valName  = "{" + valName + "}"
-        dataStr  = f"MULTIPLUS_INV{valName} {AC_voltage * AC_current}"
+        dataStr  = f"MULTIPLUS_INV{valName} {DC_voltage * DC_current}"
         print(dataStr, file=fileObj) 
         
     except Exception as e :
